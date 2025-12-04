@@ -1,9 +1,9 @@
-// use std::collections::HashMap;
+use std::collections::HashMap;
 use std::fmt::Debug;
 use std::fs::File;
-// use std::hash::Hash;
+use std::hash::Hash;
 use std::io::{BufRead, BufReader};
-// use std::ops::{Add, Sub};
+use std::ops::{Add, Sub};
 use std::str::FromStr;
 
 // use strum::EnumIter;
@@ -56,39 +56,39 @@ use std::str::FromStr;
 //     }
 // }
 
-// #[derive(PartialEq, Eq, Clone, Copy, Hash, Default)]
-// pub struct Coord2D<T> {
-//     pub x: T,
-//     pub y: T,
-// }
+#[derive(PartialEq, Eq, Clone, Copy, Hash, Default)]
+pub struct Coord2D<T> {
+    pub x: T,
+    pub y: T,
+}
 
-// impl<T: Debug> Debug for Coord2D<T> {
-//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-//         write!(f, "({:?}, {:?})", self.x, self.y)
-//     }
-// }
+impl<T: Debug> Debug for Coord2D<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "({:?}, {:?})", self.x, self.y)
+    }
+}
 
-// impl<T> Coord2D<T> {
-//     pub const fn new(x: T, y: T) -> Self {
-//         Coord2D { x, y }
-//     }
-// }
+impl<T> Coord2D<T> {
+    pub const fn new(x: T, y: T) -> Self {
+        Coord2D { x, y }
+    }
+}
 
-// impl<T: Add<Output = T>> Add for Coord2D<T> {
-//     type Output = Self;
+impl<T: Add<Output = T>> Add for Coord2D<T> {
+    type Output = Self;
 
-//     fn add(self, rhs: Self) -> Self::Output {
-//         Coord2D::new(self.x + rhs.x, self.y + rhs.y)
-//     }
-// }
+    fn add(self, rhs: Self) -> Self::Output {
+        Coord2D::new(self.x + rhs.x, self.y + rhs.y)
+    }
+}
 
-// impl<T: Sub<Output = T>> Sub for Coord2D<T> {
-//     type Output = Self;
+impl<T: Sub<Output = T>> Sub for Coord2D<T> {
+    type Output = Self;
 
-//     fn sub(self, rhs: Self) -> Self::Output {
-//         Coord2D::new(self.x - rhs.x, self.y - rhs.y)
-//     }
-// }
+    fn sub(self, rhs: Self) -> Self::Output {
+        Coord2D::new(self.x - rhs.x, self.y - rhs.y)
+    }
+}
 
 // #[derive(Debug, PartialEq, Eq, Clone, Copy, Hash, Default)]
 // pub struct Coord3D<T> {
@@ -116,49 +116,48 @@ where
         .collect()
 }
 
-// /**
-//  * T: coordinate type
-//  * S: single grid square type
-//  */
-// #[derive(Debug, Clone)]
-// pub struct Grid<T, S> {
-//     pub width: T,
-//     pub height: T,
-//     pub squares: HashMap<Coord2D<T>, S>,
-// }
+/**
+ * T: coordinate type
+ * S: single grid square type
+ */
+#[derive(Debug, Clone)]
+pub struct Grid<T, S> {
+    pub width: T,
+    pub height: T,
+    pub squares: HashMap<Coord2D<T>, S>,
+}
 
-// impl<T, S> Grid<T, S> {
-//     pub fn from_file<F>(filename: &str, into_square: F) -> Self
-//     where
-//         T: Eq + Hash + From<u8>,
-//         F: Fn(char, &Coord2D<T>) -> Option<S>,
-//     {
-//         let lines = load::<String>(filename);
-//         let height = lines.len();
-//         let width = lines[0].len();
-//         Grid {
-//             width: (width as u8).try_into().unwrap(),
-//             height: (height as u8).try_into().unwrap(),
-//             squares: lines
-//                 .into_iter()
-//                 .enumerate()
-//                 .flat_map(|(y, l)| {
-//                     l.chars()
-//                         .enumerate()
-//                         .filter_map(|(x, c)| {
-//                             // try_into().unwrap() for usize -> T
-//                             let coord = Coord2D::new(
-//                                 (x as u8).try_into().unwrap(),
-//                                 (y as u8).try_into().unwrap(),
-//                             );
-//                             into_square(c, &coord).map(|s| (coord, s))
-//                         })
-//                         .collect::<HashMap<_, _>>()
-//                 })
-//                 .collect(),
-//         }
-//     }
-// }
+impl<T, S> Grid<T, S> {
+    pub fn from_file<F>(filename: &str, into_square: F) -> Self
+    where
+        T: Eq + Hash + From<u8>,
+        F: Fn(char, &Coord2D<T>) -> Option<S>,
+    {
+        let lines = load::<String>(filename);
+        let height = lines.len();
+        let width = lines[0].len();
+        Grid {
+            width: (width as u8).try_into().unwrap(),
+            height: (height as u8).try_into().unwrap(),
+            squares: lines
+                .into_iter()
+                .enumerate()
+                .flat_map(|(y, l)| {
+                    l.chars()
+                        .enumerate()
+                        .filter_map(|(x, c)| {
+                            let coord = Coord2D::new(
+                                (x as u8).try_into().unwrap(),
+                                (y as u8).try_into().unwrap(),
+                            );
+                            into_square(c, &coord).map(|s| (coord, s))
+                        })
+                        .collect::<HashMap<_, _>>()
+                })
+                .collect(),
+        }
+    }
+}
 
 // pub fn char2num(ascii: char) -> u8 {
 //     ascii as u8 - '0' as u8
