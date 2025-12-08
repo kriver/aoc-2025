@@ -6,26 +6,24 @@ use std::io::{BufRead, BufReader};
 use std::ops::{Add, Sub};
 use std::str::FromStr;
 
-// use strum::EnumIter;
+#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
+pub enum Direction {
+    Up,
+    Right,
+    Down,
+    Left,
+}
 
-// #[derive(Debug, PartialEq, Eq, Clone, Copy, Hash, EnumIter)]
-// pub enum Direction {
-//     Up,
-//     Right,
-//     Down,
-//     Left,
-// }
-
-// impl From<Direction> for Coord2D<i32> {
-//     fn from(dir: Direction) -> Self {
-//         match dir {
-//             Direction::Up => Coord2D::new(0, -1),
-//             Direction::Right => Coord2D::new(1, 0),
-//             Direction::Down => Coord2D::new(0, 1),
-//             Direction::Left => Coord2D::new(-1, 0),
-//         }
-//     }
-// }
+impl From<Direction> for Coord2D<i32> {
+    fn from(dir: Direction) -> Self {
+        match dir {
+            Direction::Up => Coord2D::new(0, -1),
+            Direction::Right => Coord2D::new(1, 0),
+            Direction::Down => Coord2D::new(0, 1),
+            Direction::Left => Coord2D::new(-1, 0),
+        }
+    }
+}
 
 // impl Direction {
 //     pub fn turn_left(&self) -> Self {
